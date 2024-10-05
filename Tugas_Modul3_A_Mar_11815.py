@@ -69,6 +69,7 @@ if uploaded_file is not None:
     st.write("<h3 style='text-align: center; color: #007a36;'>Data yang diupload:</h3>", unsafe_allow_html=True)
     st.dataframe(input_data)
 
+
     model_path = r'GBR_IPK_model.pkl'
 
     if os.path.exists(model_path):
@@ -115,6 +116,7 @@ if uploaded_file is not None:
         
         input_data_scaled = scaler.transform(input_data)
         input_data_selected = feature_selector.transform(input_data_scaled)
+
 
         if st.sidebar.button("Prediksi!"):
             GBR_model_predict = GBR_model.predict(input_data_selected)

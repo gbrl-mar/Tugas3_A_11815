@@ -69,6 +69,7 @@ if uploaded_file is not None:
     st.write("<h3 style='text-align: center; color: #007a36;'>Data yang diupload:</h3>", unsafe_allow_html=True)
     st.dataframe(input_data)
 
+
     model_path = r'GBR_IPK_model.pkl'
 
     if os.path.exists(model_path):

@@ -116,7 +116,7 @@ if uploaded_file is not None:
         
         input_data_scaled = scaler.transform(input_data)
         input_data_selected = feature_selector.transform(input_data_scaled)
-        print(dir(your_half_squared_error_object))
+
 
         if st.sidebar.button("Prediksi!"):
             GBR_model_predict = GBR_model.predict(input_data_selected)

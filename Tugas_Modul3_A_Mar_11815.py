@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import pickle
 import os
+import requests
+import io
 
 st.markdown("""
     <style>
@@ -68,12 +70,12 @@ if uploaded_file is not None:
     input_data = pd.read_csv(uploaded_file)
     st.write("<h3 style='text-align: center; color: #007a36;'>Data yang diupload:</h3>", unsafe_allow_html=True)
     st.dataframe(input_data)
-
-    model = r'GBR_IPK_model.pkl'
-    if os.path.exists(model):
-        with open(model, 'rb') as f:
-            loaded_model = pickle.load(f)
-            
+    try:
+        model_url = r'https://raw.githubusercontent.com/gbrl-mar/regresi1_ipk/main/GBR_IPK_model.pkl'
+        response = requests.get(model_url)
+        response.raise_for_status()
+        model_file = io.BytesIO(response.content)
+        loaded_model = pickle.load(model_file)
         scaler = loaded_model[0]
         feature_selector = loaded_model[1]
         GBR_model = loaded_model[2]
@@ -118,5 +120,7 @@ if uploaded_file is not None:
         if st.sidebar.button("Prediksi!"):
             GBR_model_predict = GBR_model.predict(input_data_selected)
             st.markdown(f"<h3 style='text-align: center; color: #4CAF50;'>Prediksi IPK adalah: {GBR_model_predict[0]:.2f}</h3>", unsafe_allow_html=True)
-    else:
-        st.error("Model tidak ditemukan, silakan cek file model di direktori.")
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error loading model from GitHub: {e}")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
